@@ -49,8 +49,8 @@ const ProductPage: React.FC = () => {
       <Header />
       <main className="flex-grow">
         {loading ? (
-          <div className="h-[400px] flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-follower-blue"></div>
+          <div className="h-[300px] flex items-center justify-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-follower-blue"></div>
           </div>
         ) : (
           <>
@@ -58,20 +58,22 @@ const ProductPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="py-12"
+              className="py-6 md:py-10" // Reduced padding
             >
               <div className="container mx-auto px-4">
                 <motion.div 
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
-                  className="mb-8 text-center"
+                  className="mb-6 text-center" // Reduced margin
                 >
-                  <div className={`inline-flex items-center px-4 py-2 rounded-full ${bgColor} ${textColor} text-sm font-medium mb-4`}>
+                  <div className={`inline-flex items-center px-4 py-2 rounded-full ${bgColor} ${textColor} text-sm font-medium mb-3`}>
                     {platform.charAt(0).toUpperCase() + platform.slice(1)} {type.charAt(0).toUpperCase() + type.slice(1)}
                   </div>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-4">{productData.title}</h1>
-                  <p className="text-gray-600 max-w-2xl mx-auto">
+                  <h1 className="text-2xl md:text-3xl font-bold mb-3">
+                    {productData.title}
+                  </h1>
+                  <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
                     {productData.description}
                   </p>
                 </motion.div>
