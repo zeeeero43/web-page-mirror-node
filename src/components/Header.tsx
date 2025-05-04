@@ -1,15 +1,14 @@
 
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuLink,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
@@ -17,6 +16,11 @@ import { cn } from "@/lib/utils";
 const Header: React.FC = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
+  
+  const handleMenuOpen = (menu: string) => {
+    setOpenMenus([menu]);
+  };
   
   return (
     <>
@@ -56,8 +60,8 @@ const Header: React.FC = () => {
             {!isHomePage && (
               <NavigationMenu>
                 <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent">Instagram</NavigationMenuTrigger>
+                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('instagram')} onMouseLeave={() => setOpenMenus([])}>
+                    <NavigationMenuTrigger data-state={openMenus.includes('instagram') ? "open" : "closed"} className="bg-transparent hover:bg-transparent font-medium">Instagram</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-2 p-2">
                         <ListItem href="/instagram/follower" title="Follower" />
@@ -69,8 +73,8 @@ const Header: React.FC = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent">TikTok</NavigationMenuTrigger>
+                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('tiktok')} onMouseLeave={() => setOpenMenus([])}>
+                    <NavigationMenuTrigger data-state={openMenus.includes('tiktok') ? "open" : "closed"} className="bg-transparent hover:bg-transparent font-medium">TikTok</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-2 p-2">
                         <ListItem href="/tiktok/follower" title="Follower" />
@@ -82,8 +86,8 @@ const Header: React.FC = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent">YouTube</NavigationMenuTrigger>
+                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('youtube')} onMouseLeave={() => setOpenMenus([])}>
+                    <NavigationMenuTrigger data-state={openMenus.includes('youtube') ? "open" : "closed"} className="bg-transparent hover:bg-transparent font-medium">YouTube</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-2 p-2">
                         <ListItem href="/youtube/abonnenten" title="Abonnenten" />
@@ -94,8 +98,8 @@ const Header: React.FC = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent">Spotify</NavigationMenuTrigger>
+                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('spotify')} onMouseLeave={() => setOpenMenus([])}>
+                    <NavigationMenuTrigger data-state={openMenus.includes('spotify') ? "open" : "closed"} className="bg-transparent hover:bg-transparent font-medium">Spotify</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-2 p-2">
                         <ListItem href="/spotify/follower" title="Follower" />
@@ -105,8 +109,8 @@ const Header: React.FC = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-transparent">Twitch</NavigationMenuTrigger>
+                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('twitch')} onMouseLeave={() => setOpenMenus([])}>
+                    <NavigationMenuTrigger data-state={openMenus.includes('twitch') ? "open" : "closed"} className="bg-transparent hover:bg-transparent font-medium">Twitch</NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-2 p-2">
                         <ListItem href="/twitch/follower" title="Follower" />
@@ -118,13 +122,7 @@ const Header: React.FC = () => {
               </NavigationMenu>
             )}
 
-            <Link to="/" className="hover:text-follower-blue">
-              Startseite
-            </Link>
-            <Link to="/dienstleistungen" className="hover:text-follower-blue">
-              Alle Dienstleistungen
-            </Link>
-            <Link to="/kontakt" className="hover:text-follower-blue">
+            <Link to="/kontakt" className="hover:text-follower-blue font-medium">
               Kontakt
             </Link>
             <Link to="/cart" className="relative">

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { getPlatformColors } from "@/lib/productUtils";
+import { ArrowRight, Users, Check, Clock, Shield } from "lucide-react";
 
 interface ProductFormProps {
   productData: any;
@@ -18,8 +19,7 @@ interface ProductFormProps {
 
 const formSchema = z.object({
   quantity: z.string(),
-  username: z.string().min(1, "Benutzername/Link ist erforderlich"),
-  email: z.string().email("Gültige E-Mail erforderlich"),
+  username: z.string().min(1, "Benutzername/Link ist erforderlich")
 });
 
 const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platform }) => {
@@ -33,8 +33,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
     resolver: zodResolver(formSchema),
     defaultValues: {
       quantity: selectedPackage.amount.toString(),
-      username: "",
-      email: "",
+      username: ""
     },
   });
   
@@ -55,7 +54,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
     onSubmit({
       ...data,
       price: price,
-      packageName: selectedPackage.name,
+      packageName: `${selectedPackage.amount} ${productData.unitName}`,
     });
   };
   
@@ -74,6 +73,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
     visible: { opacity: 1, y: 0 }
   };
   
+  // Calculate bonus amount (10% of the selected quantity)
+  const bonusAmount = Math.round(selectedPackage.amount * 0.1);
+  
+  // Random numbers for FOMO effect
+  const [randomNumbers] = useState({
+    viewing: Math.floor(Math.random() * 15) + 5,
+    purchased: Math.floor(Math.random() * 12) + 3,
+    remaining: Math.floor(Math.random() * 10) + 5
+  });
+
   return (
     <motion.div
       variants={containerVariants}
@@ -103,8 +112,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">{pkg.name}</p>
-                    <p className="text-sm text-gray-500">{pkg.amount} {productData.unitName}</p>
+                    <p className="font-medium">{pkg.amount} {productData.unitName}</p>
+                    <p className="text-sm text-green-500 font-medium">{Math.round(pkg.amount * 0.1)} {productData.unitName} Bonus</p>
                   </div>
                   <div className="text-lg font-semibold">{pkg.price}€</div>
                 </div>
@@ -112,19 +121,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
             ))}
           </div>
           
-          <div className="space-y-2">
-            <h3 className="font-medium">Features:</h3>
-            <ul className="text-sm text-gray-600 space-y-1">
+          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+            <h3 className="font-semibold mb-4 flex items-center">
+              <Shield className="w-5 h-5 mr-2 text-follower-blue" />
+              Features & Vorteile
+            </h3>
+            <ul className="space-y-3">
               {productData.features.map((feature: string, index: number) => (
                 <motion.li 
                   key={index}
                   variants={itemVariants}
-                  className="flex items-center"
+                  className="flex items-start"
                 >
-                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  {feature}
+                  <Check className="w-5 h-5 mr-2 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-gray-700">{feature}</span>
                 </motion.li>
               ))}
             </ul>
@@ -135,7 +145,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
           variants={itemVariants}
           className="md:w-1/2 p-8 border-t md:border-t-0 md:border-l"
         >
-          <h2 className="text-xl font-semibold mb-6">Deine Details</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold">Deine Details</h2>
+            <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-medium flex items-center">
+              <Clock className="w-3 h-3 mr-1" />
+              Angebot endet bald
+            </span>
+          </div>
+          
+          {/* FOMO elements */}
+          <div className="mb-6 bg-amber-50 border border-amber-100 p-3 rounded-lg text-sm text-amber-800">
+            <div className="flex items-center mb-2">
+              <Users className="w-4 h-4 mr-2" />
+              <span>{randomNumbers.viewing} Personen schauen sich das gerade an</span>
+            </div>
+            <div className="text-xs">
+              {randomNumbers.purchased} Personen haben das in den letzten 24 Stunden gekauft
+            </div>
+          </div>
           
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -154,7 +181,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Wähle die Menge" />
                           </SelectTrigger>
                         </FormControl>
@@ -186,21 +213,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
                 />
               </motion.div>
               
-              <motion.div variants={itemVariants}>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>E-Mail</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="Deine E-Mail-Adresse" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </motion.div>
-              
               <motion.div 
                 variants={itemVariants}
                 className="pt-4 border-t"
@@ -211,17 +223,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
                     <p className="text-xl font-bold">{price}€</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Menge</p>
-                    <p className="text-xl font-bold">{quantity} {productData.unitName}</p>
+                    <p className="text-sm text-gray-500">Du erhältst</p>
+                    <p className="text-xl font-bold">{quantity} <span className="text-green-500">+{bonusAmount}</span> {productData.unitName}</p>
                   </div>
                 </div>
                 
                 <Button 
                   type="submit"
-                  className={`w-full py-6 ${bgColor} ${bgHoverColor}`}
+                  className={`w-full py-6 ${bgColor} ${bgHoverColor} group`}
                 >
-                  Jetzt kaufen
+                  <span className="mr-2">Jetzt kaufen</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
+                
+                <div className="mt-4 text-center text-xs text-gray-500">
+                  <p>100% sichere Zahlung & schnelle Lieferung</p>
+                  <p className="mt-1">Nur noch {randomNumbers.remaining} zum aktuellen Preis verfügbar</p>
+                </div>
               </motion.div>
             </form>
           </Form>

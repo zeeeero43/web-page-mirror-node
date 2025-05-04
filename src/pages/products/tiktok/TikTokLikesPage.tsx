@@ -4,6 +4,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChatButton from "@/components/ChatButton";
 import ProductForm from "@/components/ProductForm";
+import ProductReviewsSection from "@/components/ProductReviewsSection";
+import BestShopSection from "@/components/BestShopSection";
+import ProductFaqSection from "@/components/ProductFaqSection";
 import { getProductData, getPlatformColors } from "@/lib/productUtils";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
@@ -55,6 +58,11 @@ const TikTokLikesPage: React.FC = () => {
             />
           </div>
         </motion.section>
+        
+        {/* New sections */}
+        <BestShopSection />
+        <ProductReviewsSection />
+        <ProductFaqSection platform={platform} type={type} />
       </main>
       <Footer />
       <ChatButton />
