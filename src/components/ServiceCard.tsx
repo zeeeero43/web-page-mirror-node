@@ -2,6 +2,7 @@
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ServiceCardProps {
   icon: ReactNode;
@@ -13,7 +14,11 @@ interface ServiceCardProps {
 const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, price, link }) => {
   return (
     <Link to={link} className="block">
-      <div className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow flex items-center justify-between">
+      <motion.div 
+        whileHover={{ scale: 1.02, boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)" }}
+        transition={{ duration: 0.2 }}
+        className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow flex items-center justify-between"
+      >
         <div className="flex items-center">
           <div className="mr-3">
             {icon}
@@ -24,9 +29,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, price, link }) =
           </div>
         </div>
         <div>
-          <ChevronRight className="h-5 w-5 text-gray-400" />
+          <motion.div
+            whileHover={{ x: 2 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };
