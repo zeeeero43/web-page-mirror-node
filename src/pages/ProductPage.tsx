@@ -16,6 +16,7 @@ import { useCart } from "@/contexts/CartContext";
 const ProductPage: React.FC = () => {
   const { platform, type } = useParams<{ platform: string; type: string }>();
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
   
   useEffect(() => {
     // Simulate loading
@@ -32,13 +33,15 @@ const ProductPage: React.FC = () => {
   }
   
   const productData = getProductData(platform, type);
-  const { bgColor, textColor } = getPlatformColors(platform);
   
   if (!productData) {
     return <Navigate to="/dienstleistungen" />;
   }
   
+  const { bgColor, textColor } = getPlatformColors(platform);
+  
   const handleProductSubmit = (data: any) => {
+    addToCart(data);
     toast({
       title: "Zum Warenkorb hinzugefügt",
       description: `${data.quantity} ${productData.title} für ${data.price}€`,
@@ -59,14 +62,14 @@ const ProductPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="py-6 md:py-10" // Reduced padding
+              className="py-6 md:py-10"
             >
               <div className="container mx-auto px-4">
                 <motion.div 
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
-                  className="mb-6 text-center" // Reduced margin
+                  className="mb-6 text-center"
                 >
                   <div className={`inline-flex items-center px-4 py-2 rounded-full ${bgColor} ${textColor} text-sm font-medium mb-3`}>
                     {platform.charAt(0).toUpperCase() + platform.slice(1)} {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -87,7 +90,7 @@ const ProductPage: React.FC = () => {
               </div>
             </motion.section>
             
-            {/* New sections */}
+            {/* Additional sections */}
             <BestShopSection />
             <ProductReviewsSection />
             <ProductFaqSection platform={platform} type={type} />

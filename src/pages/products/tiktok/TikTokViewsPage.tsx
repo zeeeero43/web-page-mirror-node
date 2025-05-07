@@ -18,8 +18,10 @@ const TikTokViewsPage: React.FC = () => {
   
   const productData = getProductData(platform, type);
   const { bgColor, textColor } = getPlatformColors(platform);
+  const { addToCart } = useCart();
   
   const handleProductSubmit = (data: any) => {
+    addToCart(data);
     toast({
       title: "Zum Warenkorb hinzugefügt",
       description: `${data.quantity} ${productData.title} für ${data.price}€`,
