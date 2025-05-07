@@ -15,16 +15,17 @@ interface ProductFormProps {
   platform: string;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ productData, platform }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platform }) => {
   const [selectedTab, setSelectedTab] = useState('0');
   const [username, setUsername] = useState('');
   const [link, setLink] = useState('');
-  const { addToCart, setIsCartOpen } = useCart();
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     const selectedOption = productData.options[parseInt(selectedTab)];
     
     if (!selectedOption) {
+      console.error("No option selected");
       return;
     }
 
@@ -44,19 +45,28 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, platform }) => {
       title: `${selectedOption.quantity} ${productData.title}`,
       platform,
       type: productData.type,
-      quantity: 1,
+      quantity: selectedOption.quantity,
       price: selectedOption.price,
       username: productData.usernameField === 'username' ? username : '',
       link: productData.usernameField === 'link' ? link : '',
     };
 
-    addToCart(cartItem);
-    
-    toast({
-      title: "Zum Warenkorb hinzugefügt",
-      description: `${selectedOption.quantity} ${productData.title} für ${selectedOption.price}€`,
-    });
+    // Use either the passed onSubmit function or directly add to cart
+    if (onSubmit) {
+      onSubmit(cartItem);
+    } else {
+      addToCart(cartItem);
+      toast({
+        title: "Zum Warenkorb hinzugefügt",
+        description: `${selectedOption.quantity} ${productData.title} für ${selectedOption.price}€`,
+      });
+    }
   };
+  
+  if (!productData || !productData.options) {
+    console.error("Product data or options missing", productData);
+    return <div>Produktdaten fehlen</div>;
+  }
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
