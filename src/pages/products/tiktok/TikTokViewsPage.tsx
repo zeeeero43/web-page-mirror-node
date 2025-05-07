@@ -10,6 +10,7 @@ import ProductFaqSection from "@/components/ProductFaqSection";
 import { getProductData, getPlatformColors } from "@/lib/productUtils";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 const TikTokViewsPage: React.FC = () => {
   const platform = "tiktok";

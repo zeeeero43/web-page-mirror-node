@@ -11,6 +11,7 @@ import ProductFaqSection from "@/components/ProductFaqSection";
 import { getPlatformColors, getProductData } from "@/lib/productUtils";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 const ProductPage: React.FC = () => {
   const { platform, type } = useParams<{ platform: string; type: string }>();
