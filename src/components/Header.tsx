@@ -1,347 +1,209 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useMobile } from '@/hooks/use-mobile';
+import CartButton from '@/components/CartButton';
+import { Menu, X } from 'lucide-react';
 
-import React, { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-  DrawerOverlay,
-} from "@/components/ui/drawer";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+interface DropdownOption {
+  name: string;
+  path: string;
+}
 
 const Header: React.FC = () => {
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
-  const isMobile = useIsMobile();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const handleMenuOpen = (menu: string) => {
-    setOpenMenus([menu]);
-  };
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const isMobile = useMobile();
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    // Close mobile menu on route change
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-  
-  const menuItems = {
-    instagram: [
-      { title: "Follower", href: "/instagram/follower" },
-      { title: "Viral Paket", href: "/instagram/viral" },
-      { title: "Likes", href: "/instagram/likes" },
-      { title: "Aufrufe", href: "/instagram/aufrufe" },
-      { title: "Kommentare", href: "/instagram/kommentare" },
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleDropdownHover = (dropdownName: string | null) => {
+    if (!isMobile) {
+      setActiveDropdown(dropdownName);
+    }
+  };
+
+  const handleDropdownClick = (dropdownName: string) => {
+    if (isMobile) {
+      setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
+    }
+  };
+
+  const dropdownOptions: { [key: string]: DropdownOption[] } = {
+    Instagram: [
+      { name: 'Follower', path: '/instagram/follower' },
+      { name: 'Likes', path: '/instagram/likes' },
+      { name: 'Aufrufe', path: '/instagram/aufrufe' },
+      { name: 'Kommentare', path: '/instagram/kommentare' },
+      { name: 'Viral Paket', path: '/instagram/viral' },
     ],
-    tiktok: [
-      { title: "Follower", href: "/tiktok/follower" },
-      { title: "Viral Paket", href: "/tiktok/viral" },
-      { title: "Likes", href: "/tiktok/likes" },
-      { title: "Aufrufe", href: "/tiktok/aufrufe" },
-      { title: "Kommentare", href: "/tiktok/kommentare" },
+    TikTok: [
+      { name: 'Follower', path: '/tiktok/follower' },
+      { name: 'Likes', path: '/tiktok/likes' },
+      { name: 'Aufrufe', path: '/tiktok/aufrufe' },
+      { name: 'Kommentare', path: '/tiktok/kommentare' },
+      { name: 'Viral Paket', path: '/tiktok/viral' },
     ],
-    youtube: [
-      { title: "Abonnenten", href: "/youtube/abonnenten" },
-      { title: "Likes", href: "/youtube/likes" },
-      { title: "Aufrufe", href: "/youtube/aufrufe" },
-      { title: "Kommentare", href: "/youtube/kommentare" },
+    YouTube: [
+      { name: 'Abonnenten', path: '/youtube/abonnenten' },
+      { name: 'Likes', path: '/youtube/likes' },
+      { name: 'Aufrufe', path: '/youtube/aufrufe' },
+      { name: 'Kommentare', path: '/youtube/kommentare' },
     ],
-    spotify: [
-      { title: "Follower", href: "/spotify/follower" },
-      { title: "Streams", href: "/spotify/streams" },
-      { title: "Monatliche Hörer", href: "/spotify/hoerer" },
+    Spotify: [
+      { name: 'Follower', path: '/spotify/follower' },
+      { name: 'Streams', path: '/spotify/streams' },
+      { name: 'Monatliche Hörer', path: '/spotify/hoerer' },
     ],
-    twitch: [
-      { title: "Follower", href: "/twitch/follower" },
-      { title: "Live Zuschauer", href: "/twitch/zuschauer" },
+    Twitch: [
+      { name: 'Follower', path: '/twitch/follower' },
+      { name: 'Live Zuschauer', path: '/twitch/zuschauer' },
     ],
   };
 
-  const renderMobileMenu = () => (
-    <div className="lg:hidden">
-      <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <DrawerTrigger asChild>
-          <button className="p-2" aria-label="Menu">
-            <Menu className="h-6 w-6" />
-          </button>
-        </DrawerTrigger>
-        <DrawerContent className="h-[80vh]">
-          <div className="p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <Link to="/" className="flex items-center gap-1">
-                <div className="bg-follower-blue rounded p-0.5 text-white text-sm font-bold">FP</div>
-                <span className="font-bold text-lg">FollowerPulse</span>
-              </Link>
-              <DrawerClose className="p-2">
-                <X className="h-5 w-5" />
-              </DrawerClose>
-            </div>
-            
-            <nav className="space-y-6">
-              <div>
-                <h3 className="font-medium mb-3 text-lg">Instagram</h3>
-                <ul className="space-y-2 pl-2">
-                  {menuItems.instagram.map((item) => (
-                    <li key={item.href}>
-                      <Link 
-                        to={item.href} 
-                        className="block py-1 hover:text-follower-blue" 
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-medium mb-3 text-lg">TikTok</h3>
-                <ul className="space-y-2 pl-2">
-                  {menuItems.tiktok.map((item) => (
-                    <li key={item.href}>
-                      <Link 
-                        to={item.href} 
-                        className="block py-1 hover:text-follower-blue" 
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-medium mb-3 text-lg">YouTube</h3>
-                <ul className="space-y-2 pl-2">
-                  {menuItems.youtube.map((item) => (
-                    <li key={item.href}>
-                      <Link 
-                        to={item.href} 
-                        className="block py-1 hover:text-follower-blue" 
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-medium mb-3 text-lg">Spotify</h3>
-                <ul className="space-y-2 pl-2">
-                  {menuItems.spotify.map((item) => (
-                    <li key={item.href}>
-                      <Link 
-                        to={item.href} 
-                        className="block py-1 hover:text-follower-blue" 
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-medium mb-3 text-lg">Twitch</h3>
-                <ul className="space-y-2 pl-2">
-                  {menuItems.twitch.map((item) => (
-                    <li key={item.href}>
-                      <Link 
-                        to={item.href} 
-                        className="block py-1 hover:text-follower-blue" 
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <Link to="/kontakt" className="block py-1 text-lg font-medium hover:text-follower-blue" onClick={() => setMobileMenuOpen(false)}>
-                  Kontakt
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  );
-  
   return (
-    <>
-      {/* Special Offer Banner */}
-      <div className="bg-follower-blue text-white text-center py-2 md:py-3 flex items-center justify-center">
-        <div className="flex-grow text-center">
-          <span className="inline-block bg-white/20 rounded px-2 py-1 text-xs mr-2">SPEZIAL-AKTION</span>
-          <span className="font-semibold">10% Rabatt mit dem Code PULSE10</span>
-        </div>
-        <div className="hidden md:flex gap-1 mr-4">
-          <div className="bg-white/20 rounded px-2 py-0.5 text-center">
-            <div className="text-sm font-bold">00</div>
-            <div className="text-xs">STD</div>
-          </div>
-          <div className="bg-white/20 rounded px-2 py-0.5 text-center">
-            <div className="text-sm font-bold">06</div>
-            <div className="text-xs">MIN</div>
-          </div>
-          <div className="bg-white/20 rounded px-2 py-0.5 text-center">
-            <div className="text-sm font-bold">46</div>
-            <div className="text-xs">SEK</div>
-          </div>
+    <header
+      className={`sticky top-0 z-40 w-full ${
+        scrolled ? 'bg-white shadow-sm' : 'bg-white'
+      } transition-all duration-200`}
+    >
+      <div className="container mx-auto px-4 flex justify-between h-16 items-center">
+        <Link to="/" className="text-xl font-bold flex items-center">
+          <span className="text-follower-blue">FollowerKaufen</span>
+          <span className="text-black">.de</span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-6">
+          {Object.entries(dropdownOptions).map(([key, options]) => (
+            <div
+              key={key}
+              className="relative"
+              onMouseEnter={() => handleDropdownHover(key)}
+              onMouseLeave={() => handleDropdownHover(null)}
+              onClick={() => handleDropdownClick(key)}
+            >
+              <button className="flex items-center space-x-1 py-2">
+                <span className="capitalize">{key}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`transition-transform duration-200 ${
+                    activeDropdown === key ? 'rotate-180' : ''
+                  }`}
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              {activeDropdown === key && (
+                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                  {options.map((option) => (
+                    <Link
+                      key={option.path}
+                      to={option.path}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setActiveDropdown(null)}
+                    >
+                      {option.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-4">
+          <CartButton />
+          
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex md:hidden text-gray-500 hover:text-gray-700"
+          >
+            {isOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
       </div>
-      
-      {/* Main Navigation */}
-      <header className="border-b sticky top-0 z-50 bg-white">
-        <nav className="container mx-auto flex items-center justify-between py-3 px-4">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-1">
-              <div className="bg-follower-blue rounded p-0.5 text-white text-sm font-bold">FP</div>
-              <span className="font-bold text-lg">FollowerPulse</span>
-            </Link>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden bg-white shadow-lg">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {Object.entries(dropdownOptions).map(([key, options]) => (
+              <div key={key} className="block">
+                <button
+                  onClick={() => handleDropdownClick(key)}
+                  className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                >
+                  <span className="capitalize">{key}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`transition-transform duration-200 ${
+                      activeDropdown === key ? 'rotate-180' : ''
+                    }`}
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+                {activeDropdown === key && (
+                  <div className="pl-4 py-2 space-y-1">
+                    {options.map((option) => (
+                      <Link
+                        key={option.path}
+                        to={option.path}
+                        className="block px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-100"
+                        onClick={() => {
+                          setIsOpen(false);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        {option.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          
-          <div className="flex items-center space-x-4 md:space-x-6">
-            {!isHomePage && !isMobile && (
-              <NavigationMenu onMouseLeave={() => setOpenMenus([])}>
-                <NavigationMenuList>
-                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('instagram')} 
-                    className="font-medium text-base">
-                    <NavigationMenuTrigger 
-                      data-state={openMenus.includes('instagram') ? "open" : "closed"} 
-                      className="bg-transparent hover:bg-transparent">Instagram</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 p-2">
-                        {menuItems.instagram.map((item) => (
-                          <ListItem key={item.href} href={item.href} title={item.title} />
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('tiktok')}
-                    className="font-medium text-base">
-                    <NavigationMenuTrigger 
-                      data-state={openMenus.includes('tiktok') ? "open" : "closed"} 
-                      className="bg-transparent hover:bg-transparent">TikTok</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 p-2">
-                        {menuItems.tiktok.map((item) => (
-                          <ListItem key={item.href} href={item.href} title={item.title} />
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('youtube')}
-                    className="font-medium text-base">
-                    <NavigationMenuTrigger 
-                      data-state={openMenus.includes('youtube') ? "open" : "closed"} 
-                      className="bg-transparent hover:bg-transparent">YouTube</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 p-2">
-                        {menuItems.youtube.map((item) => (
-                          <ListItem key={item.href} href={item.href} title={item.title} />
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('spotify')}
-                    className="font-medium text-base">
-                    <NavigationMenuTrigger 
-                      data-state={openMenus.includes('spotify') ? "open" : "closed"} 
-                      className="bg-transparent hover:bg-transparent">Spotify</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 p-2">
-                        {menuItems.spotify.map((item) => (
-                          <ListItem key={item.href} href={item.href} title={item.title} />
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem onMouseEnter={() => handleMenuOpen('twitch')}
-                    className="font-medium text-base">
-                    <NavigationMenuTrigger 
-                      data-state={openMenus.includes('twitch') ? "open" : "closed"} 
-                      className="bg-transparent hover:bg-transparent">Twitch</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 p-2">
-                        {menuItems.twitch.map((item) => (
-                          <ListItem key={item.href} href={item.href} title={item.title} />
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            )}
-
-            {!isMobile && (
-              <Link to="/kontakt" className="hover:text-follower-blue font-medium">
-                Kontakt
-              </Link>
-            )}
-            
-            <Link to="/cart" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-2 -right-2 bg-follower-blue text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                0
-              </span>
-            </Link>
-            
-            {/* Mobile Menu Button */}
-            {!isHomePage && isMobile && renderMobileMenu()}
-          </div>
-        </nav>
-      </header>
-    </>
+        </div>
+      )}
+    </header>
   );
 };
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { title: string }
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          {children && <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>}
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
 
 export default Header;

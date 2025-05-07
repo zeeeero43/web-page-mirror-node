@@ -1,15 +1,13 @@
 
-import React, { useState, useEffect } from "react";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { motion } from "framer-motion";
-import { getPlatformColors } from "@/lib/productUtils";
-import { ArrowRight, Users, Check, Clock, Shield } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { motion } from 'framer-motion';
+import { Check, ShoppingCart } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
+import { v4 as uuidv4 } from 'uuid';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductFormProps {
   productData: any;
@@ -17,235 +15,158 @@ interface ProductFormProps {
   platform: string;
 }
 
-const formSchema = z.object({
-  quantity: z.string(),
-  username: z.string().min(1, "Benutzername/Link ist erforderlich")
-});
+const ProductForm: React.FC<ProductFormProps> = ({ productData, platform }) => {
+  const [selectedTab, setSelectedTab] = useState('0');
+  const [username, setUsername] = useState('');
+  const [link, setLink] = useState('');
+  const { addToCart, setIsCartOpen } = useCart();
 
-const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platform }) => {
-  const [selectedPackage, setSelectedPackage] = useState(productData.packages[0]);
-  const [price, setPrice] = useState(selectedPackage.price);
-  const [quantity, setQuantity] = useState(selectedPackage.amount);
-  
-  const { bgColor, bgHoverColor } = getPlatformColors(platform);
-  
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      quantity: selectedPackage.amount.toString(),
-      username: ""
-    },
-  });
-  
-  useEffect(() => {
-    form.setValue("quantity", selectedPackage.amount.toString());
-    setQuantity(selectedPackage.amount);
-    setPrice(selectedPackage.price);
-  }, [selectedPackage, form]);
-  
-  const handlePackageChange = (value: string) => {
-    const newPackage = productData.packages.find((pkg: any) => pkg.amount.toString() === value);
-    if (newPackage) {
-      setSelectedPackage(newPackage);
+  const handleAddToCart = () => {
+    const selectedOption = productData.options[parseInt(selectedTab)];
+    
+    if (!selectedOption) {
+      return;
     }
-  };
-  
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    onSubmit({
-      ...data,
-      price: price,
-      packageName: `${selectedPackage.amount} ${productData.unitName}`,
+
+    if (!username && !link) {
+      toast({
+        title: "Fehler",
+        description: productData.usernameField === 'link' 
+          ? "Bitte gib einen Link ein" 
+          : "Bitte gib einen Benutzernamen ein",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const cartItem = {
+      id: uuidv4(),
+      title: `${selectedOption.quantity} ${productData.title}`,
+      platform,
+      type: productData.type,
+      quantity: 1,
+      price: selectedOption.price,
+      username: productData.usernameField === 'username' ? username : '',
+      link: productData.usernameField === 'link' ? link : '',
+    };
+
+    addToCart(cartItem);
+    
+    toast({
+      title: "Zum Warenkorb hinzugefügt",
+      description: `${selectedOption.quantity} ${productData.title} für ${selectedOption.price}€`,
     });
   };
   
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-  
-  // Calculate bonus amount (10% of the selected quantity)
-  const bonusAmount = Math.round(selectedPackage.amount * 0.1);
-  
-  // Random numbers for FOMO effect
-  const [randomNumbers] = useState({
-    viewing: Math.floor(Math.random() * 15) + 5,
-    purchased: Math.floor(Math.random() * 12) + 3,
-    remaining: Math.floor(Math.random() * 10) + 5
-  });
-
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
-    >
-      <div className="flex flex-col md:flex-row">
-        <motion.div 
-          variants={itemVariants}
-          className="md:w-1/2 p-8 bg-gray-50"
-        >
-          <h2 className="text-xl font-semibold mb-6">Wähle dein Paket</h2>
-          
-          <div className="space-y-3 mb-8">
-            {productData.packages.map((pkg: any, index: number) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                  selectedPackage.amount === pkg.amount 
-                    ? `border-2 ${bgColor} bg-opacity-5` 
-                    : "border-gray-200"
-                }`}
-                onClick={() => handlePackageChange(pkg.amount.toString())}
-              >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{pkg.amount} {productData.unitName}</p>
-                    <p className="text-sm text-green-500 font-medium">{Math.round(pkg.amount * 0.1)} {productData.unitName} Bonus</p>
-                  </div>
-                  <div className="text-lg font-semibold">{pkg.price}€</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          
-          <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-            <h3 className="font-semibold mb-4 flex items-center">
-              <Shield className="w-5 h-5 mr-2 text-follower-blue" />
-              Features & Vorteile
-            </h3>
-            <ul className="space-y-3">
-              {productData.features.map((feature: string, index: number) => (
-                <motion.li 
-                  key={index}
-                  variants={itemVariants}
-                  className="flex items-start"
-                >
-                  <Check className="w-5 h-5 mr-2 text-green-500 shrink-0 mt-0.5" />
-                  <span className="text-gray-700">{feature}</span>
-                </motion.li>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Card>
+        <CardContent className="pt-6">
+          <Tabs defaultValue="0" onValueChange={setSelectedTab}>
+            <TabsList className="grid grid-cols-5 mb-4">
+              {productData.options.map((option: any, index: number) => (
+                <TabsTrigger key={index} value={index.toString()}>
+                  {option.quantity}
+                </TabsTrigger>
               ))}
-            </ul>
-          </div>
-        </motion.div>
-        
-        <motion.div 
-          variants={itemVariants}
-          className="md:w-1/2 p-8 border-t md:border-t-0 md:border-l"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">Deine Details</h2>
-            <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-medium flex items-center">
-              <Clock className="w-3 h-3 mr-1" />
-              Angebot endet bald
-            </span>
-          </div>
-          
-          {/* FOMO elements */}
-          <div className="mb-6 bg-amber-50 border border-amber-100 p-3 rounded-lg text-sm text-amber-800">
-            <div className="flex items-center mb-2">
-              <Users className="w-4 h-4 mr-2" />
-              <span>{randomNumbers.viewing} Personen schauen sich das gerade an</span>
-            </div>
-            <div className="text-xs">
-              {randomNumbers.purchased} Personen haben das in den letzten 24 Stunden gekauft
-            </div>
-          </div>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-              <motion.div variants={itemVariants}>
-                <FormField
-                  control={form.control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Menge</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          handlePackageChange(value);
-                        }}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Wähle die Menge" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {productData.packages.map((pkg: any, index: number) => (
-                            <SelectItem key={index} value={pkg.amount.toString()}>
-                              {pkg.amount} {productData.unitName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormItem>
-                  )}
-                />
-              </motion.div>
-              
-              <motion.div variants={itemVariants}>
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{productData.usernameLabel || "Benutzername/Link"}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={`Dein ${platform} ${productData.usernameLabel || "Benutzername"}`} {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </motion.div>
-              
-              <motion.div 
-                variants={itemVariants}
-                className="pt-4 border-t"
-              >
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <p className="text-sm text-gray-500">Preis</p>
-                    <p className="text-xl font-bold">{price}€</p>
+            </TabsList>
+            
+            {productData.options.map((option: any, index: number) => (
+              <TabsContent key={index} value={index.toString()}>
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <div className="text-xl font-bold">{option.quantity} {productData.title}</div>
+                      <div className="text-xl font-bold">{option.price}€</div>
+                    </div>
+                    
+                    {option.bonus > 0 && (
+                      <div className="text-green-500 text-sm font-medium mt-1">
+                        + {option.bonus} {productData.title} Bonus
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Du erhältst</p>
-                    <p className="text-xl font-bold">{quantity} <span className="text-green-500">+{bonusAmount}</span> {productData.unitName}</p>
+                  
+                  <div className="space-y-3">
+                    {productData.features.map((feature: string, i: number) => (
+                      <div key={i} className="flex items-center">
+                        <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                
-                <Button 
-                  type="submit"
-                  className={`w-full py-6 ${bgColor} ${bgHoverColor} group`}
-                >
-                  <span className="mr-2">Jetzt kaufen</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-                
-                <div className="mt-4 text-center text-xs text-gray-500">
-                  <p>100% sichere Zahlung & schnelle Lieferung</p>
-                  <p className="mt-1">Nur noch {randomNumbers.remaining} zum aktuellen Preis verfügbar</p>
-                </div>
-              </motion.div>
-            </form>
-          </Form>
-        </motion.div>
-      </div>
-    </motion.div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardContent className="pt-6 space-y-4">
+          <h3 className="text-lg font-medium">Deine Informationen</h3>
+          
+          <div className="space-y-3">
+            {productData.usernameField === 'username' ? (
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                  Dein {platform} Benutzername
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 px-3 py-2 border"
+                  placeholder={`@dein${platform}username`}
+                />
+              </div>
+            ) : (
+              <div>
+                <label htmlFor="link" className="block text-sm font-medium text-gray-700 mb-1">
+                  Dein {platform} Link
+                </label>
+                <input
+                  id="link"
+                  type="text"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
+                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 px-3 py-2 border"
+                  placeholder={`https://${platform.toLowerCase()}.com/...`}
+                />
+              </div>
+            )}
+          </div>
+          
+          <motion.div
+            className="bg-green-50 border border-green-200 rounded-md p-3 text-sm text-green-800"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <p className="font-medium">✓ 100% sicher und zuverlässig</p>
+            <p>Schnelle Lieferung, keine Passwörter benötigt</p>
+          </motion.div>
+          
+          <Button 
+            onClick={handleAddToCart} 
+            className="w-full text-lg py-6 mt-4"
+            size="lg"
+          >
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            In den Warenkorb
+          </Button>
+          
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mt-2">
+            <span>Sichere Bezahlung</span>
+            <span>•</span>
+            <span>Schnelle Lieferung</span>
+            <span>•</span>
+            <span>24/7 Support</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
