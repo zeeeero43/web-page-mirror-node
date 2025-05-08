@@ -29,14 +29,12 @@ const ProductPage: React.FC = () => {
   
   // Check if platform and type are valid
   if (!platform || !type) {
-    console.log("Missing platform or type parameters");
+    console.error("Missing platform or type parameters");
     return <Navigate to="/dienstleistungen" />;
   }
   
   // Get the raw product data
   const productData = getProductData(platform, type);
-  
-  console.log("Product Page rendering", { platform, type, productData });
   
   if (!productData) {
     console.error("Product data not found for:", platform, type);
