@@ -33,14 +33,27 @@ const ProductPage: React.FC = () => {
     return <Navigate to="/dienstleistungen" />;
   }
   
+  // Get the raw product data
   const productData = getProductData(platform, type);
   
   console.log("Product Page rendering", { platform, type, productData });
   
   if (!productData) {
-    console.log("Product data not found");
+    console.error("Product data not found for:", platform, type);
     return <Navigate to="/dienstleistungen" />;
   }
+  
+  // Transform product data to match the format expected by ProductForm
+  const formattedProductData = {
+    ...productData,
+    options: productData.packages.map(pkg => ({
+      quantity: pkg.amount,
+      price: pkg.price,
+      bonus: 0, // Add default bonus if not present
+    })),
+    type: type,
+    usernameField: productData.usernameLabel?.toLowerCase().includes('url') ? 'link' : 'username',
+  };
   
   const { bgColor, textColor } = getPlatformColors(platform);
   
@@ -87,7 +100,7 @@ const ProductPage: React.FC = () => {
                 </motion.div>
                 
                 <ProductForm 
-                  productData={productData} 
+                  productData={formattedProductData} 
                   onSubmit={handleProductSubmit}
                   platform={platform}
                 />

@@ -14,16 +14,31 @@ import { useCart } from "@/contexts/CartContext";
 
 const TikTokViewsPage: React.FC = () => {
   const platform = "tiktok";
-  const type = "views";
+  const type = "aufrufe"; // Changed from "views" to "aufrufe" to match the data structure
   
   const productData = getProductData(platform, type);
   
   if (!productData) {
-    return <div>Produkt nicht gefunden</div>;
+    console.error("Product data not found for:", platform, type);
+    return <div className="min-h-screen flex flex-col items-center justify-center">
+      <p className="text-xl">Produkt nicht gefunden</p>
+    </div>;
   }
   
   const { bgColor, textColor } = getPlatformColors(platform);
   const { addToCart } = useCart();
+  
+  // Transform product data to match the format expected by ProductForm
+  const formattedProductData = {
+    ...productData,
+    options: productData.packages.map(pkg => ({
+      quantity: pkg.amount,
+      price: pkg.price,
+      bonus: 0, // Add default bonus if not present
+    })),
+    type: type,
+    usernameField: productData.usernameLabel?.toLowerCase().includes('url') ? 'link' : 'username',
+  };
   
   const handleProductSubmit = (data: any) => {
     addToCart(data);
@@ -33,7 +48,7 @@ const TikTokViewsPage: React.FC = () => {
     });
   };
   
-  console.log("TikTok Views Page rendering", { productData });
+  console.log("TikTok Views Page rendering", { productData, formattedProductData });
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -64,7 +79,7 @@ const TikTokViewsPage: React.FC = () => {
             </motion.div>
             
             <ProductForm 
-              productData={productData} 
+              productData={formattedProductData} 
               onSubmit={handleProductSubmit}
               platform={platform}
             />
