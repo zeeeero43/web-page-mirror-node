@@ -22,6 +22,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
+    if (!productData || !productData.options) {
+      console.error("Product data or options missing in handleAddToCart", productData);
+      toast({
+        title: "Fehler",
+        description: "Produktdaten fehlen. Bitte versuche es später erneut.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const selectedOption = productData.options[parseInt(selectedTab)];
     
     if (!selectedOption) {
@@ -29,7 +39,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
       return;
     }
 
-    if (!username && !link) {
+    if (!username && !link && (productData.usernameField === 'username' || productData.usernameField === 'link')) {
       toast({
         title: "Fehler",
         description: productData.usernameField === 'link' 
@@ -40,16 +50,19 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
       return;
     }
 
+    // Fix: Create a single cart item with the correct quantity and price
     const cartItem = {
       id: uuidv4(),
-      title: `${selectedOption.quantity} ${productData.title}`,
+      title: productData.title,
       platform,
       type: productData.type,
       quantity: selectedOption.quantity,
-      price: selectedOption.price,
+      price: selectedOption.price, // Use the price directly from the selected option
       username: productData.usernameField === 'username' ? username : '',
       link: productData.usernameField === 'link' ? link : '',
     };
+
+    console.log("Adding to cart:", cartItem);
 
     // Use either the passed onSubmit function or directly add to cart
     if (onSubmit) {
@@ -98,7 +111,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productData, onSubmit, platfo
                   </div>
                   
                   <div className="space-y-3">
-                    {productData.features.map((feature: string, i: number) => (
+                    {productData.features && productData.features.map((feature: string, i: number) => (
                       <div key={i} className="flex items-center">
                         <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
                         <span>{feature}</span>

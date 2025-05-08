@@ -43,19 +43,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = (item: CartItem) => {
+    // Add the item as a single entry regardless of quantity
     setItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + item.quantity }
-            : i
-        );
-      }
-      
-      return [...prevItems, item];
+      // Generate a unique id for each item
+      const itemWithUniqueId = {
+        ...item,
+        id: item.id || `${item.platform}-${item.type}-${Date.now()}`
+      };
+      return [...prevItems, itemWithUniqueId];
     });
+    
+    // Open the cart when an item is added
+    setIsCartOpen(true);
   };
 
   const removeFromCart = (itemId: string) => {
@@ -79,8 +78,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setItems([]);
   };
 
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
-  const totalPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  // Count the number of items in the cart (now just the length of the array)
+  const totalItems = items.length;
+  
+  // Calculate the total price (sum of all item prices)
+  const totalPrice = items.reduce((total, item) => total + item.price, 0);
 
   return (
     <CartContext.Provider

@@ -49,7 +49,7 @@ const CartDrawer: React.FC = () => {
               >
                 <div className="flex-1">
                   <h4 className="font-medium">
-                    <span className="capitalize">{item.platform}</span> {item.type}
+                    {item.quantity} {item.title}
                   </h4>
                   <p className="text-sm text-muted-foreground">
                     {item.username || item.link}
@@ -59,21 +59,6 @@ const CartDrawer: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  >
-                    <MinusCircle className="h-4 w-4" />
-                  </Button>
-                  <span className="w-8 text-center">{item.quantity}</span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
