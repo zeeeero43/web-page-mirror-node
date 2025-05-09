@@ -69,18 +69,18 @@ const App = () => (
             <Route path="/tiktok/aufrufe" element={<TikTokViewsPage />} />
             <Route path="/tiktok/kommentare" element={<TikTokCommentsPage />} />
             
-            {/* YouTube Routes */}
+            {/* YouTube Routes - German naming scheme */}
             <Route path="/youtube/abonnenten" element={<YouTubeSubscriberPage />} />
             <Route path="/youtube/likes" element={<YouTubeLikesPage />} />
             <Route path="/youtube/aufrufe" element={<YouTubeViewsPage />} />
             <Route path="/youtube/kommentare" element={<YouTubeCommentsPage />} />
             
-            {/* Spotify Routes */}
+            {/* Spotify Routes - German naming scheme */}
             <Route path="/spotify/follower" element={<SpotifyFollowerPage />} />
             <Route path="/spotify/streams" element={<SpotifyStreamsPage />} />
             <Route path="/spotify/hoerer" element={<SpotifyListenersPage />} />
             
-            {/* Twitch Routes */}
+            {/* Twitch Routes - German naming scheme */}
             <Route path="/twitch/follower" element={<TwitchFollowerPage />} />
             <Route path="/twitch/zuschauer" element={<TwitchViewersPage />} />
             

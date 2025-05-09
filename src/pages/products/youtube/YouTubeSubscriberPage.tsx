@@ -14,7 +14,7 @@ import { useCart } from "@/contexts/CartContext";
 
 const YouTubeSubscriberPage: React.FC = () => {
   const platform = "youtube";
-  const type = "subscriber";
+  const type = "abonnenten"; // Changed from "subscriber" to match data structure
   
   const productData = getProductData(platform, type);
   

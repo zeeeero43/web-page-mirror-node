@@ -14,7 +14,7 @@ import { useCart } from "@/contexts/CartContext";
 
 const TwitchViewersPage: React.FC = () => {
   const platform = "twitch";
-  const type = "viewers";
+  const type = "zuschauer"; // Changed from "viewers" to match data structure
   
   const productData = getProductData(platform, type);
   

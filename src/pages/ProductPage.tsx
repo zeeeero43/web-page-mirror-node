@@ -13,6 +13,26 @@ import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 
+// Map for type translations used in routes
+const typeMap: Record<string, string> = {
+  // German to internal data structure mapping
+  "abonnenten": "abonnenten",
+  "aufrufe": "aufrufe", 
+  "kommentare": "kommentare",
+  "likes": "likes",
+  "follower": "follower",
+  "streams": "streams",
+  "hoerer": "hoerer", 
+  "zuschauer": "zuschauer",
+  "viral": "viral",
+  // English fallbacks for legacy routes
+  "views": "aufrufe",
+  "comments": "kommentare",
+  "subscriber": "abonnenten",
+  "listeners": "hoerer",
+  "viewers": "zuschauer"
+};
+
 const ProductPage: React.FC = () => {
   const { platform, type } = useParams<{ platform: string; type: string }>();
   const [loading, setLoading] = useState(true);
@@ -33,11 +53,14 @@ const ProductPage: React.FC = () => {
     return <Navigate to="/dienstleistungen" />;
   }
   
-  // Get the raw product data
-  const productData = getProductData(platform, type);
+  // Map the type from the URL to the correct key in the product data
+  const dataType = typeMap[type.toLowerCase()] || type;
+  
+  // Get the raw product data using the mapped type
+  const productData = getProductData(platform, dataType);
   
   if (!productData) {
-    console.error("Product data not found for:", platform, type);
+    console.error("Product data not found for:", platform, dataType);
     return <Navigate to="/dienstleistungen" />;
   }
   
@@ -49,7 +72,7 @@ const ProductPage: React.FC = () => {
       price: pkg.price,
       bonus: 0, // Add default bonus if not present
     })),
-    type: type,
+    type: dataType,
     usernameField: productData.usernameLabel?.toLowerCase().includes('url') ? 'link' : 'username',
   };
   
@@ -87,7 +110,7 @@ const ProductPage: React.FC = () => {
                   className="mb-6 text-center"
                 >
                   <div className={`inline-flex items-center px-4 py-2 rounded-full ${bgColor} ${textColor} text-sm font-medium mb-3`}>
-                    {platform.charAt(0).toUpperCase() + platform.slice(1)} {type.charAt(0).toUpperCase() + type.slice(1)}
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)} {dataType.charAt(0).toUpperCase() + dataType.slice(1)}
                   </div>
                   <h1 className="text-2xl md:text-3xl font-bold mb-3">
                     {productData.title}
@@ -108,7 +131,7 @@ const ProductPage: React.FC = () => {
             {/* Additional sections */}
             <BestShopSection />
             <ProductReviewsSection />
-            <ProductFaqSection platform={platform} type={type} />
+            <ProductFaqSection platform={platform} type={dataType} />
           </>
         )}
       </main>
