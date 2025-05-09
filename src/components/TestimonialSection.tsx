@@ -19,7 +19,7 @@ const TestimonialSection: React.FC = () => {
         </div>
         
         <div className="flex justify-center mb-2">
-          <StarRating size="md" />
+          <StarRating size="md" rating={4.8} />
         </div>
         
         <div className="flex justify-center items-center mb-8">

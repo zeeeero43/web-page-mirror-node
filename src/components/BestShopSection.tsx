@@ -1,99 +1,55 @@
 
 import React from "react";
-import { motion } from "framer-motion";
-import { ShieldCheck, Clock, CreditCard, HeartHandshake, ThumbsUp } from "lucide-react";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const BestShopSection: React.FC = () => {
-  const features = [
-    {
-      icon: <ShieldCheck className="h-10 w-10 text-follower-blue" />,
-      title: "Sicherheit garantiert",
-      description: "Alle deine Daten werden sicher verarbeitet und niemals weitergegeben."
-    },
-    {
-      icon: <Clock className="h-10 w-10 text-follower-blue" />,
-      title: "Sofortige Lieferung",
-      description: "Unsere Systeme liefern in der Regel innerhalb von Minuten."
-    },
-    {
-      icon: <CreditCard className="h-10 w-10 text-follower-blue" />,
-      title: "Sichere Zahlung",
-      description: "Wir akzeptieren alle gängigen Zahlungsmethoden und Kryptowährungen."
-    },
-    {
-      icon: <HeartHandshake className="h-10 w-10 text-follower-blue" />,
-      title: "24/7 Support",
-      description: "Unser Team steht dir rund um die Uhr zur Verfügung."
-    },
-    {
-      icon: <ThumbsUp className="h-10 w-10 text-follower-blue" />,
-      title: "Kundenzufriedenheit",
-      description: "98% unserer Kunden sind mit unserem Service zufrieden."
-    }
-  ];
-
+  const { siteName } = useSiteConfig();
+  
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="py-16 bg-white"
-    >
+    <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <motion.h2 
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold mb-4"
-          >
-            Warum FollowerPulse der beste Shop ist
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-600 max-w-2xl mx-auto"
-          >
-            Wir setzen auf Qualität, Sicherheit und Kundenzufriedenheit. Über 50.000 zufriedene Kunden vertrauen uns bereits.
-          </motion.p>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold">
+            Warum {siteName} der beste Shop ist
+          </h2>
+          <p className="text-gray-600 mt-2">
+            Unsere Kunden entscheiden sich für uns aufgrund unserer Qualität, Zuverlässigkeit und Erfahrung
+          </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div className="bg-blue-50 p-3 rounded-lg inline-block mb-4">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <div className="inline-block bg-follower-blue text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-follower-brightblue transition-colors cursor-pointer">
-            Jetzt starten und deine Reichweite erhöhen!
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-follower-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Sichere Bestellungen</h3>
+            <p className="text-gray-600">Alle Bestellungen werden verschlüsselt und sicher abgewickelt. Ihre Daten sind bei uns sicher.</p>
           </div>
-        </motion.div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-follower-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Schnelle Lieferung</h3>
+            <p className="text-gray-600">Wir beginnen sofort mit der Bearbeitung Ihrer Bestellung und liefern schnellstmöglich.</p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-follower-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
+            <p className="text-gray-600">Unser Kundenservice steht Ihnen rund um die Uhr zur Verfügung, um alle Ihre Fragen zu beantworten.</p>
+          </div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

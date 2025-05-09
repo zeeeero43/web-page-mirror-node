@@ -27,7 +27,7 @@ const StarRating: React.FC<StarRatingProps> = ({
           key={star} 
           src="/lovable-uploads/ede65c16-5fb5-47d2-8d69-bc5a41618d25.png" 
           alt="Star" 
-          className={`${starSize} ${star <= rating ? 'opacity-100' : 'opacity-50'}`}
+          className={`${starSize} ${star <= rating ? 'opacity-100' : 'opacity-30'}`}
         />
       ))}
     </div>

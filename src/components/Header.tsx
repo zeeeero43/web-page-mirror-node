@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Instagram, Youtube } from 'lucide-react';
 import CartButton from './CartButton';
 import { motion } from 'framer-motion';
 import { useSiteConfig } from '@/hooks/useSiteConfig';
@@ -33,6 +33,13 @@ const Header: React.FC = () => {
   const TwitchIcon = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M11.64 5.93H13.07V10.21H11.64M15.57 5.93H17V10.21H15.57M7 2L3.43 5.57V18.43H7.71V22L11.29 18.43H14.14L20.57 12V2M19.14 11.29L16.29 14.14H13.43L10.93 16.64V14.14H7.71V3.43H19.14V11.29Z" fill="currentColor"/>
+    </svg>
+  );
+
+  // Custom TikTok SVG icon
+  const TikTokIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16.6 5.82C15.9165 5.03962 15.5397 4.03743 15.54 3H12.45V15.4C12.4262 16.071 12.1333 16.7066 11.6345 17.1726C11.1356 17.6386 10.4783 17.8906 9.80001 17.87C8.39001 17.87 7.22001 16.71 7.22001 15.29C7.22001 13.87 8.38001 12.71 9.80001 12.71C10.15 12.71 10.49 12.78 10.79 12.9V9.75C10.3756 9.67814 9.95296 9.64513 9.53001 9.65C8.55001 9.65 7.62001 9.96 6.84001 10.55C6.06001 11.14 5.48001 11.968 5.17001 12.91C4.86001 13.852 4.83001 14.862 5.11001 15.823C5.39001 16.784 5.95001 17.65 6.74001 18.29C7.53001 18.93 8.51001 19.32 9.53001 19.32C10.55 19.32 11.53 18.93 12.33 18.29C13.13 17.65 13.69 16.784 13.97 15.823C14.25 14.862 14.22 13.852 13.91 12.91H13.92V8.75C15.0101 9.55776 16.3411 9.96742 17.7 9.91V6.82C17.3 6.82 16.9 6.82 16.6 5.82Z" fill="currentColor"/>
     </svg>
   );
 
@@ -70,26 +77,29 @@ const Header: React.FC = () => {
                       <NavLink
                         to="/instagram/follower"
                         onClick={closeMenu}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
                       >
-                        Instagram Follower
+                        <Instagram className="w-4 h-4 mr-2" />
+                        <span>Instagram Follower</span>
                       </NavLink>
                       <NavLink
                         to="/tiktok/follower"
                         onClick={closeMenu}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
                       >
-                        TikTok Follower
+                        <TikTokIcon />
+                        <span className="ml-2">TikTok Follower</span>
                       </NavLink>
                       <NavLink
                         to="/youtube/abonnenten"
                         onClick={closeMenu}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
                       >
-                        YouTube Abonnenten
+                        <Youtube className="w-4 h-4 mr-2" />
+                        <span>YouTube Abonnenten</span>
                       </NavLink>
                       <NavLink
                         to="/spotify/follower"
@@ -146,8 +156,8 @@ const Header: React.FC = () => {
             {!isHomePage && (
               <>
                 <div className="relative group">
-                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors">
-                    Instagram
+                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
+                    <Instagram className="w-4 h-4 mr-1" /> Instagram
                   </span>
                   <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <div className="py-1">
@@ -171,8 +181,8 @@ const Header: React.FC = () => {
                 </div>
                 
                 <div className="relative group">
-                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors">
-                    TikTok
+                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
+                    <TikTokIcon /> <span className="ml-1">TikTok</span>
                   </span>
                   <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <div className="py-1">
@@ -196,8 +206,8 @@ const Header: React.FC = () => {
                 </div>
                 
                 <div className="relative group">
-                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors">
-                    YouTube
+                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
+                    <Youtube className="w-4 h-4 mr-1" /> YouTube
                   </span>
                   <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <div className="py-1">
