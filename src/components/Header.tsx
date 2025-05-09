@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Menu, X, Spotify, Twitch } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import CartButton from './CartButton';
 import { motion } from 'framer-motion';
 import { useSiteConfig } from '@/hooks/useSiteConfig';
@@ -21,6 +21,20 @@ const Header: React.FC = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // Custom Spotify SVG icon
+  const SpotifyIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.5 16.5C16.32 16.5 16.15 16.44 16.01 16.31C14.73 15.18 13.06 14.55 11.28 14.55C10.14 14.55 9.01 14.76 7.96 15.17C7.66 15.28 7.33 15.12 7.22 14.82C7.11 14.51 7.27 14.18 7.58 14.07C8.78 13.6 10.05 13.36 11.28 13.36C13.33 13.36 15.25 14.08 16.75 15.38C17 15.6 17.03 15.97 16.82 16.22C16.73 16.41 16.62 16.5 16.5 16.5ZM17.61 13.89C17.39 13.89 17.19 13.8 17.07 13.63C15.53 11.86 13.35 10.86 11.01 10.86C9.6 10.86 8.22 11.16 6.94 11.75C6.59 11.91 6.19 11.75 6.03 11.4C5.87 11.04 6.03 10.64 6.38 10.48C7.87 9.8 9.46 9.45 11.01 9.45C13.71 9.45 16.23 10.6 18.03 12.66C18.26 12.95 18.21 13.36 17.92 13.59C17.83 13.79 17.72 13.89 17.61 13.89ZM18.93 10.68C18.67 10.68 18.43 10.56 18.3 10.34C16.47 7.96 13.34 6.5 10.02 6.5C8.37 6.5 6.73 6.85 5.21 7.57C4.81 7.74 4.36 7.54 4.19 7.14C4.01 6.73 4.22 6.28 4.62 6.11C6.38 5.29 8.28 4.88 10.02 4.88C13.83 4.88 17.45 6.56 19.58 9.34C19.82 9.68 19.75 10.14 19.41 10.38C19.26 10.58 19.09 10.68 18.93 10.68Z" fill="currentColor"/>
+    </svg>
+  );
+
+  // Custom Twitch SVG icon
+  const TwitchIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11.64 5.93H13.07V10.21H11.64M15.57 5.93H17V10.21H15.57M7 2L3.43 5.57V18.43H7.71V22L11.29 18.43H14.14L20.57 12V2M19.14 11.29L16.29 14.14H13.43L10.93 16.64V14.14H7.71V3.43H19.14V11.29Z" fill="currentColor"/>
+    </svg>
+  );
 
   return (
     <header className="bg-background border-b">
@@ -83,8 +97,8 @@ const Header: React.FC = () => {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
                       >
-                        <Spotify className="h-4 w-4 mr-2" />
-                        Spotify Follower
+                        <SpotifyIcon />
+                        <span className="ml-2">Spotify Follower</span>
                       </NavLink>
                       <NavLink
                         to="/twitch/follower"
@@ -92,8 +106,8 @@ const Header: React.FC = () => {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem"
                       >
-                        <Twitch className="h-4 w-4 mr-2" />
-                        Twitch Follower
+                        <TwitchIcon />
+                        <span className="ml-2">Twitch Follower</span>
                       </NavLink>
                     </>
                   )}
@@ -205,7 +219,7 @@ const Header: React.FC = () => {
                 
                 <div className="relative group">
                   <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
-                    <Spotify className="h-4 w-4 mr-1" /> Spotify
+                    <SpotifyIcon /> <span className="ml-1">Spotify</span>
                   </span>
                   <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <div className="py-1">
@@ -224,7 +238,7 @@ const Header: React.FC = () => {
                 
                 <div className="relative group">
                   <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
-                    <Twitch className="h-4 w-4 mr-1" /> Twitch
+                    <TwitchIcon /> <span className="ml-1">Twitch</span>
                   </span>
                   <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <div className="py-1">
