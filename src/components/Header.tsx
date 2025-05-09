@@ -5,12 +5,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Menu, X } from 'lucide-react';
 import CartButton from './CartButton';
 import { motion } from 'framer-motion';
+import { useSiteConfig } from '@/hooks/useSiteConfig';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const { siteName } = useSiteConfig();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -24,7 +26,7 @@ const Header: React.FC = () => {
     <header className="bg-background border-b">
       <div className="container flex items-center justify-between py-4 px-4">
         <Link to="/" className="font-bold text-2xl">
-          DeinShop
+          {siteName}
         </Link>
 
         {isMobile ? (

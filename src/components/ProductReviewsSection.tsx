@@ -2,6 +2,8 @@
 import React from "react";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import StarRating from "./StarRating";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 interface Reviewer {
   name: string;
@@ -53,6 +55,8 @@ const reviewers: Reviewer[] = [
 ];
 
 const ProductReviewsSection: React.FC = () => {
+  const { siteName } = useSiteConfig();
+  
   return (
     <motion.section 
       initial={{ opacity: 0, y: 20 }}
@@ -74,14 +78,7 @@ const ProductReviewsSection: React.FC = () => {
             <div className="text-center md:text-left">
               <div className="text-5xl font-bold text-gray-800">4,91</div>
               <div className="flex justify-center md:justify-start mt-2">
-                {[1, 2, 3, 4, 5].map((_, i) => (
-                  <img 
-                    key={i} 
-                    src="/lovable-uploads/f2b2623d-de2a-4e2f-88bf-91eeeb940cc4.png" 
-                    alt="Star" 
-                    className="h-6 w-6"
-                  />
-                ))}
+                <StarRating size="lg" />
               </div>
               <div className="mt-2 text-gray-600">376+ Bewertungen</div>
             </div>
@@ -130,14 +127,7 @@ const ProductReviewsSection: React.FC = () => {
                 </div>
               </div>
               <div className="flex mb-3">
-                {[1, 2, 3, 4, 5].map((_, i) => (
-                  <img 
-                    key={i} 
-                    src="/lovable-uploads/f2b2623d-de2a-4e2f-88bf-91eeeb940cc4.png" 
-                    alt="Star" 
-                    className="h-5 w-5"
-                  />
-                ))}
+                <StarRating size="sm" />
               </div>
               <p className="text-gray-700">{reviewer.comment}</p>
             </motion.div>

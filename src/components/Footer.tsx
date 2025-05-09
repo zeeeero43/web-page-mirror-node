@@ -2,22 +2,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
+import StarRating from "./StarRating";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const Footer: React.FC = () => {
+  const { siteName } = useSiteConfig();
+  
   return (
     <footer className="bg-white border-t">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="mb-8 md:mb-0">
             <div className="flex items-center mb-4">
-              <div className="bg-follower-blue rounded p-1 text-white text-sm font-bold mr-2">FP</div>
-              <span className="font-bold text-lg">FollowerPulse</span>
+              <div className="bg-follower-blue rounded p-1 text-white text-sm font-bold mr-2">HF</div>
+              <span className="font-bold text-lg">{siteName}</span>
             </div>
             <p className="text-gray-600 mb-4">Wir sind die Nr. 1 auf dem deutschen Markt.</p>
             <div className="flex items-center mb-3">
-              {[1, 2, 3, 4, 5].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-green-500 text-green-500" />
-              ))}
+              <StarRating size="sm" />
               <span className="ml-2 font-medium">4.8</span>
             </div>
             <p className="text-green-600 flex items-center">
@@ -30,6 +32,7 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold mb-4">Informationen</h3>
             <ul className="space-y-2">
               <li><Link to="/kontakt" className="text-gray-600 hover:text-follower-blue">Kontakt</Link></li>
+              <li><Link to="/uber-uns" className="text-gray-600 hover:text-follower-blue">Über uns</Link></li>
               <li><Link to="/bewertungen" className="text-gray-600 hover:text-follower-blue">Bewertungen</Link></li>
               <li><Link to="/agb" className="text-gray-600 hover:text-follower-blue">AGB</Link></li>
               <li><Link to="/datenschutz" className="text-gray-600 hover:text-follower-blue">Datenschutz</Link></li>

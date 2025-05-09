@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import DienstleistungenPage from "./pages/DienstleistungenPage";
 import KontaktPage from "./pages/KontaktPage";
+import UberUnsPage from "./pages/UberUnsPage";
 
 // Product Pages
 import ProductPage from "./pages/ProductPage";
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/dienstleistungen" element={<DienstleistungenPage />} />
             <Route path="/kontakt" element={<KontaktPage />} />
+            <Route path="/uber-uns" element={<UberUnsPage />} />
             
             {/* Product Pages */}
             <Route path="/produkte/:platform/:type" element={<ProductPage />} />
