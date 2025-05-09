@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Spotify, Twitch } from 'lucide-react';
 import CartButton from './CartButton';
 import { motion } from 'framer-motion';
 import { useSiteConfig } from '@/hooks/useSiteConfig';
@@ -77,16 +77,36 @@ const Header: React.FC = () => {
                       >
                         YouTube Abonnenten
                       </NavLink>
+                      <NavLink
+                        to="/spotify/follower"
+                        onClick={closeMenu}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        role="menuitem"
+                      >
+                        <Spotify className="h-4 w-4 mr-2" />
+                        Spotify Follower
+                      </NavLink>
+                      <NavLink
+                        to="/twitch/follower"
+                        onClick={closeMenu}
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        role="menuitem"
+                      >
+                        <Twitch className="h-4 w-4 mr-2" />
+                        Twitch Follower
+                      </NavLink>
                     </>
                   )}
-                  <NavLink
-                    to="/dienstleistungen"
-                    onClick={closeMenu}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    Dienstleistungen
-                  </NavLink>
+                  {isHomePage && (
+                    <NavLink
+                      to="/dienstleistungen"
+                      onClick={closeMenu}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Dienstleistungen
+                    </NavLink>
+                  )}
                   <NavLink
                     to="/uber-uns"
                     onClick={closeMenu}
@@ -182,18 +202,55 @@ const Header: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                
+                <div className="relative group">
+                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
+                    <Spotify className="h-4 w-4 mr-1" /> Spotify
+                  </span>
+                  <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div className="py-1">
+                      <NavLink to="/spotify/follower" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Spotify Follower
+                      </NavLink>
+                      <NavLink to="/spotify/streams" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Spotify Streams
+                      </NavLink>
+                      <NavLink to="/spotify/hoerer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Spotify Hörer
+                      </NavLink>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="relative group">
+                  <span className="text-sm font-medium text-gray-500 hover:text-primary cursor-pointer transition-colors flex items-center">
+                    <Twitch className="h-4 w-4 mr-1" /> Twitch
+                  </span>
+                  <div className="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div className="py-1">
+                      <NavLink to="/twitch/follower" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Twitch Follower
+                      </NavLink>
+                      <NavLink to="/twitch/zuschauer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Twitch Zuschauer
+                      </NavLink>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
-            <NavLink
-              to="/dienstleistungen"
-              className={({ isActive }) =>
-                `text-sm font-medium transition-colors hover:text-primary ${
-                  isActive ? 'text-primary' : 'text-gray-500'
-                }`
-              }
-            >
-              Dienstleistungen
-            </NavLink>
+            {isHomePage && (
+              <NavLink
+                to="/dienstleistungen"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors hover:text-primary ${
+                    isActive ? 'text-primary' : 'text-gray-500'
+                  }`
+                }
+              >
+                Dienstleistungen
+              </NavLink>
+            )}
             <NavLink
               to="/uber-uns"
               className={({ isActive }) =>
