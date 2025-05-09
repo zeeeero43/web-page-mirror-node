@@ -85,6 +85,9 @@ const ProductPage: React.FC = () => {
       description: `${data.quantity} ${productData.title} für ${data.price}€`,
     });
   };
+
+  // Create a display name for the badge
+  const displayName = `${platform.charAt(0).toUpperCase() + platform.slice(1)} ${dataType.charAt(0).toUpperCase() + dataType.slice(1)}`;
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -110,7 +113,7 @@ const ProductPage: React.FC = () => {
                   className="mb-6 text-center"
                 >
                   <div className={`inline-flex items-center px-4 py-2 rounded-full ${bgColor} ${textColor} text-sm font-medium mb-3`}>
-                    {platform.charAt(0).toUpperCase() + platform.slice(1)} {dataType.charAt(0).toUpperCase() + dataType.slice(1)}
+                    {displayName}
                   </div>
                   <h1 className="text-2xl md:text-3xl font-bold mb-3">
                     {productData.title}
